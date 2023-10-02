@@ -5,10 +5,15 @@ function Signup() {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [confirmpass, setconfirmpass] = useState("");
+  const [isSignup, setIsSignUP] = useState(false);
+  const signupHAndler = () => {
+    setIsSignUP((prevstate) => !prevstate);
+  };
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    if (password === confirmpass) {
+    if (!isSignup) {
+        if(password === confirmpass){
       try {
         const response = await fetch(
           "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCybdrpqrvY0IcG00qrSUGktX-0TbtpEok",
@@ -32,9 +37,36 @@ function Signup() {
         }
       } catch (error) {
         alert(error);
+      }}
+      else {
+        alert("password do not match");
+    } 
+    }
+    else{
+      try {
+        const response = await fetch(
+          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCybdrpqrvY0IcG00qrSUGktX-0TbtpEok",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              email: email,
+              password: password,
+              returnSecureToken: true,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          const errorMessage = await response.json();
+          throw new Error(errorMessage.error.message);
+        } else {
+          console.log("Login success");
+        }
+      } catch (error) {
+        alert(error);
       }
-    } else {
-      alert("password do not match");
     }
 
     setemail("");
@@ -49,10 +81,19 @@ function Signup() {
           src="https://www.giantbomb.com/a/uploads/scale_medium/0/118/544727-umbrellacorporation3.png"
           alt="Your Company"
         />
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          New Here?
-        </h2>
-        <p>Sign up and start your journey</p>
+        {isSignup ? (
+          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            Sign in
+          </h2>
+        ) : (
+          <>
+            {" "}
+            <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+              New Here?
+            </h2>
+            <p>Sign up and start your journey</p>
+          </>
+        )}
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -74,7 +115,7 @@ function Signup() {
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 onChange={(e) => setemail(e.target.value)}
                 value={email}
-                placeholder="email"
+                placeholder="enter your email address"
               />
             </div>
           </div>
@@ -95,38 +136,47 @@ function Signup() {
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 onChange={(e) => setpassword(e.target.value)}
                 value={password}
+                placeholder="enter your password"
               />
             </div>
           </div>
-
-          <div>
-            <label
-              htmlFor="confirmpassword"
-              className="block text-sm font-medium leading-6 text-gray-900 mt-2"
-            >
-              Confirm Password
-            </label>
-            <div className="mt-2">
-              <input
-                id="confirmpassword"
-                name="confirmpassword"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                onChange={(e) => setconfirmpass(e.target.value)}
-                value={confirmpass}
-              />
+          {!isSignup && (
+            <div>
+              <label
+                htmlFor="confirmpassword"
+                className="block text-sm font-medium leading-6 text-gray-900 mt-2"
+              >
+                Confirm Password
+              </label>
+              <div className="mt-2">
+                <input
+                  id="confirmpassword"
+                  name="confirmpassword"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  onChange={(e) => setconfirmpass(e.target.value)}
+                  value={confirmpass}
+                  placeholder="Re-enter your password"
+                />
+              </div>
             </div>
-          </div>
+          )}
 
           <div>
             <button
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Sign up
+              {isSignup ? "Sign in" : "Sign up"}
             </button>
+            <p className="p-2" onClick={signupHAndler}>
+              {" "}
+              {isSignup
+                ? "Do not have an account? click to Sign up"
+                : "Already have an account! sign in"}
+            </p>
           </div>
         </form>
       </div>
