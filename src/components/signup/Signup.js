@@ -1,11 +1,15 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import AuthContext from "../Store/Auth-Context";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [confirmpass, setconfirmpass] = useState("");
   const [isSignup, setIsSignUP] = useState(false);
+  const Authctx = useContext(AuthContext);
+  const navigate = useNavigate()
   const signupHAndler = () => {
     setIsSignUP((prevstate) => !prevstate);
   };
@@ -62,7 +66,10 @@ function Signup() {
           const errorMessage = await response.json();
           throw new Error(errorMessage.error.message);
         } else {
+          const tokenData = await response.json();
+          Authctx.Login(tokenData.idToken, tokenData.email);
           console.log("Login success");
+          navigate('/')
         }
       } catch (error) {
         alert(error);
