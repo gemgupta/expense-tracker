@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import AuthContext from "../Store/Auth-Context";
 import { useNavigate } from "react-router-dom";
 
@@ -43,6 +43,37 @@ function Details() {
     setname("");
     setPhotourl("");
   };
+  useEffect(() => {
+    async function getUserDetails() {
+      try {
+        const response = await fetch(
+          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCybdrpqrvY0IcG00qrSUGktX-0TbtpEok",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              idToken: Authctx.Token,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setname(data.users[0].displayName);
+          setPhotourl(data.users[0].photoUrl);
+          console.log(data)
+        } else {
+          const errorMessage = await response.json();
+          throw new Error(errorMessage.error.message);
+        }
+      } catch (error) {
+        alert(error);
+      }
+    }
+    getUserDetails();
+  }, []);
+
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 ">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
