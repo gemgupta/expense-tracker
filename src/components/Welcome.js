@@ -24,14 +24,18 @@ function Welcome() {
       console.log(error);
     }
   };
+  const logoutHandler= ()=>{
+    Authctx.Logout()
+  }
   return (
     <div className="">
       <h1 className=" block text-xl">Welcome to expense tracker</h1>
-      <div className="flex justify-end p-3">
+      <div className="flex justify-end p-3 m-2">
         Your profile is incomplete{" "}
-        <Link className="underline text-blue-600" to="/Details">
+        <Link className="underline text-blue-600 " to="/Details">
           Click here to complete
         </Link>{" "}
+        <button onClick={logoutHandler} className="p-2 border rounded-lg bg-red-700 text-cyan-50 m-1">Logout</button>
       </div>
       <h2 className="underline text-blue-600" onClick={verifyUserHandler}> Verify your email</h2>
     </div>
