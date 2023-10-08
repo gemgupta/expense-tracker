@@ -37,7 +37,7 @@ function Welcome() {
         </Link>{" "}
         <button onClick={logoutHandler} className="p-2 border rounded-lg bg-red-700 text-cyan-50 m-1">Logout</button>
       </div>
-      <h2 className="underline text-blue-600" onClick={verifyUserHandler}> Verify your email</h2>
+      <h2 className="underline text-blue-600 cursor-pointer" onClick={verifyUserHandler}> Verify your email</h2>
     </div>
   );
 }
