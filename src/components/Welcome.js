@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "./Store/Auth-Context";
 import { useContext } from "react";
+import Expense from "./Expense/Expense";
 function Welcome() {
   const Authctx = useContext(AuthContext);
   const token = Authctx.Token;
@@ -38,6 +39,7 @@ function Welcome() {
         <button onClick={logoutHandler} className="p-2 border rounded-lg bg-red-700 text-cyan-50 m-1">Logout</button>
       </div>
       <h2 className="underline text-blue-600 cursor-pointer" onClick={verifyUserHandler}> Verify your email</h2>
+      <Expense/>
     </div>
   );
 }
