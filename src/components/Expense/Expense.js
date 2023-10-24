@@ -5,7 +5,13 @@ function Expense() {
   const [number, setnumber] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [editedNumber, seteditedNumber] = useState("");
+  const [editeddescription, setediteddescription] = useState("");
+  const [editedcategory, seteditedcategory] = useState("");
+  const [editItemKey, setEditItemKey] = useState(null);
+  const [modal, setModal] = useState(false);
   const [items, setItenms] = useState([]);
+  // const [editItem, setEditItem] = useState({});
 
   const expenseSubmitHandler = async (e) => {
     e.preventDefault();
@@ -38,7 +44,6 @@ function Expense() {
     } catch (error) {
       alert(error.messages);
     }
-    // console.log(item);
   };
 
   useEffect(() => {
@@ -92,102 +97,252 @@ function Expense() {
     } catch (error) {
       alert(error.messages);
     }
-    console.log(key);
+  };
+  const editExpenseHandler = async (key) => {
+    setModal(true);
+    try {
+      const response = await fetch(
+        `https://expense-tracker-35a83-default-rtdb.firebaseio.com/expense/${key}.json`,
+        {
+          method: "GET",
+
+          headers: { "Content-Type": "Application/json" },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Something went wrong. GET DATA NOT SUCCESSFUL");
+      } else {
+        const data = await response.json();
+        // setEditItem(data);
+        seteditedNumber(data.number)
+        setediteddescription(data.description)
+        seteditedcategory(data.category)
+        setEditItemKey(key)
+      }
+    } catch (error) {
+      alert(error.messages);
+    }
   };
 
+  const putRequestHandler= async(e)=>{
+e.preventDefault();
+const updatedExpense = {
+  
+  key: Math.random(),
+  number: editedNumber,
+  description: editeddescription,
+  category: editedcategory,
+};
+try {
+  const response = await fetch(
+    `https://expense-tracker-35a83-default-rtdb.firebaseio.com/expense/${editItemKey}.json`,
+    {
+      method: "PUT",
+      body: JSON.stringify(updatedExpense),
+      headers: { "Content-Type": "Application/json" },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Something went wrong. POST DATA NOT SUCCESSFUL");
+  } else {
+    const updatedItems = items.map((item) =>
+        item.id === editItemKey ? { ...item, ...updatedExpense } : item
+      );
+      setItenms(updatedItems);
+    setModal(false)
+    setEditItemKey(null)
+    seteditedcategory("");
+    setediteddescription("");
+    seteditedNumber("");
+  }
+} catch (error) {
+  alert(error.messages);
+}
+
+  }
   return (
     <div className=" bg-black h-screen">
-      <h2 className=" w-1/2 text-center font-bold m-auto p-5 text-white">
-        Start adding your expenses
-      </h2>
-      <form
-        onSubmit={expenseSubmitHandler}
-        className=" block border  shadow-md shadow-white bg-slate-300 w-1/2 rounded-lg m-auto p-5"
-      >
-        <div className="block">
-          <label className="rounded m-1 p-1 font-bold" htmlFor="amount">
-            amount
-          </label>
-          <input
-            type="number"
-            placeholder="enter amount"
-            onChange={(e) => {
-              setnumber(e.target.value);
-            }}
-            className="rounded m-1 p-1 w-36"
-            value={number}
-            required
-          />
-          <label className="rounded m-1 p-1 font-bold" htmlFor="description">
-            description
-          </label>
-          <input
-            type="text"
-            placeholder="enter description"
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
-            value={description}
-            className="rounded m-1 p-1 "
-            required
-          />
-          <label className="rounded m-1 p-1 font-bold" htmlFor="category">
-            Category
-          </label>
-          <select
-            name="category"
-            id="category"
-            value={category}
-            onChange={(e) => {
-              if (
-                e.target.value === "food" ||
-                e.target.value === "Movie" ||
-                e.target.value === "transport"
-              )
-                setCategory(e.target.value);
-              else {
-                alert("select a category");
-              }
-            }}
-            className="rounded m-1 p-1"
-            required
-          >
-            <option value="select">Select</option>
-            <option value="food">food</option>
-            <option value="Movie">Movie</option>
-            <option value="transport">transport</option>
-          </select>
-        </div>
-        <button
-          className="border p-2 mt-2 m-auto block w-28 bg-red-600 text-white rounded-lg "
-          type="submit"
+      {!modal ? (
+        <h2 className=" w-1/2 text-center font-bold m-auto p-5 text-white">
+          Start adding your expenses
+        </h2>
+      ) : (
+        <h2 className=" w-1/2 text-center font-bold m-auto p-5 text-white">
+          Edit Your Expense
+        </h2>
+      )}
+      {!modal && (
+        <form
+          onSubmit={expenseSubmitHandler}
+          className=" block border  shadow-md shadow-white bg-slate-300 w-1/2 rounded-lg m-auto p-5"
         >
-          Add
-        </button>
-      </form>
-      <ul className=" border shadow-sm shadow-white  mt-5 bg-slate-500 w-1/2 rounded-lg m-auto p-5 text-center">
-        {Object.keys(items).map((key) => {
-          const item = items[key];
-          return (
-            <li
-              key={key}
-              className="border mt-1 bg-slate-300 w-auto rounded-lg m-auto p-5 text-center"
+          <div className="block">
+            <label className="rounded m-1 p-1 font-bold" htmlFor="amount">
+              amount
+            </label>
+            <input
+              type="number"
+              placeholder="enter amount"
+              onChange={(e) => {
+                setnumber(e.target.value);
+              }}
+              className="rounded m-1 p-1 w-36"
+              value={number}
+              required
+            />
+            <label className="rounded m-1 p-1 font-bold" htmlFor="description">
+              description
+            </label>
+            <input
+              type="text"
+              placeholder="enter description"
+              onChange={(e) => {
+                setDescription(e.target.value);
+              }}
+              value={description}
+              className="rounded m-1 p-1 "
+              required
+            />
+            <label className="rounded m-1 p-1 font-bold" htmlFor="category">
+              Category
+            </label>
+            <select
+              name="category"
+              id="category"
+              value={category}
+              onChange={(e) => {
+                if (
+                  e.target.value === "food" ||
+                  e.target.value === "Movie" ||
+                  e.target.value === "transport"
+                )
+                  setCategory(e.target.value);
+                else {
+                  alert("select a category");
+                }
+              }}
+              className="rounded m-1 p-1"
+              required
             >
-              {item.number} ruppes is spent on {item.description}. Category is{" "}
-              {item.category}
-              <button className="p-1 border rounded-lg bg-gray-500 text-cyan-50  float-right w-16 m-auto ">
-                Edit
-              </button>
-              <button
-                onClick={() => deleteExpenseHandler(item.id)}
-                className="p-1 border rounded-lg bg-red-700 text-cyan-50 m-auto float-right w-16 "
+              <option value="select">Select</option>
+              <option value="food">food</option>
+              <option value="Movie">Movie</option>
+              <option value="transport">transport</option>
+            </select>
+          </div>
+          <button
+            className="border p-2 mt-2 m-auto block w-28 bg-red-600 text-white rounded-lg "
+            type="submit"
+          >
+            Add
+          </button>
+        </form>
+      )}
+      {modal && (
+        <form
+          onSubmit={putRequestHandler}
+          className=" block border  shadow-md shadow-white bg-slate-300 w-1/2 rounded-lg m-auto p-5"
+        >
+          <div className="block">
+            <label className="rounded m-1 p-1 font-bold" htmlFor="amount">
+              amount
+            </label>
+            <input
+              type="number"
+              placeholder="enter amount"
+              onChange={(e) => {
+                seteditedNumber(e.target.value);
+              }}
+              className="rounded m-1 p-1 w-36"
+              value={editedNumber}
+              required
+            />
+            <label className="rounded m-1 p-1 font-bold" htmlFor="description">
+              description
+            </label>
+            <input
+              type="text"
+              placeholder="enter description"
+              onChange={(e) => {
+                setediteddescription(e.target.value);
+              }}
+              value={editeddescription}
+              className="rounded m-1 p-1 "
+              required
+            />
+            <label className="rounded m-1 p-1 font-bold" htmlFor="category">
+              Category
+            </label>
+            <select
+              name="category"
+              id="category"
+              value={editedcategory}
+              onChange={(e) => {
+                if (
+                  e.target.value === "food" ||
+                  e.target.value === "Movie" ||
+                  e.target.value === "transport"
+                )
+                  seteditedcategory(e.target.value);
+                else {
+                  alert("select a category");
+                }
+              }}
+              className="rounded m-1 p-1"
+              required
+            >
+              <option value="select">Select</option>
+              <option value="food">food</option>
+              <option value="Movie">Movie</option>
+              <option value="transport">transport</option>
+            </select>
+          </div>
+          <div className="flex justify-end">
+          <button
+            className="border p-2 mt-2 mr-2  w-34 bg-red-600 text-white rounded-lg "
+            type="submit"
+          >
+            Save Changes
+          </button>
+          <button
+            className="border p-2 mt-2   w-28 bg-red-600 text-white rounded-lg "
+            onClick={()=>{setModal(false); setEditItemKey(null);  seteditedcategory("");
+            setediteddescription("");
+            seteditedNumber("");}}
+          >
+            Back
+          </button>
+          </div>
+        </form>
+      )}
+      {!modal && (
+        <ul className=" border shadow-sm shadow-white  mt-5 bg-slate-500 w-1/2 rounded-lg m-auto p-5 text-center">
+          {Object.keys(items).map((key) => {
+            const item = items[key];
+            return (
+              <li
+                key={key}
+                className="border mt-1 bg-slate-300 w-auto rounded-lg m-auto p-5 text-center"
               >
-                Delete
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+                {item.number} ruppes is spent on {item.description}. Category is{" "}
+                {item.category}
+                <button
+                  onClick={() => editExpenseHandler(item.id)}
+                  className="p-1 border rounded-lg bg-gray-500 text-cyan-50  float-right w-16 m-auto "
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => deleteExpenseHandler(item.id)}
+                  className="p-1 border rounded-lg bg-red-700 text-cyan-50 m-auto float-right w-16 "
+                >
+                  Delete
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 }
