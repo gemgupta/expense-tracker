@@ -53,11 +53,16 @@ function Expense() {
           }
         );
         if (!response.ok) {
-          throw new Error("Something went wrong. POST DATA NOT SUCCESSFUL");
+          throw new Error("Something went wrong. GET DATA NOT SUCCESSFUL");
         } else {
           const data = await response.json();
 
-          setItenms(Object.values(data));
+          const expenses = Object.keys(data).map((key) => ({
+            id: key, // Store the Firebase key as 'id'
+            ...data[key],
+          }));
+
+          setItenms(expenses);
         }
       } catch (error) {
         alert(error.messages);
@@ -66,6 +71,29 @@ function Expense() {
 
     fetchData();
   }, []);
+
+  const deleteExpenseHandler = async (key) => {
+    try {
+      const response = await fetch(
+        `https://expense-tracker-35a83-default-rtdb.firebaseio.com/expense/${key}.json`,
+        {
+          method: "DELETE",
+
+          headers: { "Content-Type": "Application/json" },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Something went wrong. DELETE DATA NOT SUCCESSFUL");
+      } else {
+        const updatedItems = items.filter((item) => item.id !== key);
+        setItenms(updatedItems);
+        console.log(updatedItems);
+      }
+    } catch (error) {
+      alert(error.messages);
+    }
+    console.log(key);
+  };
 
   return (
     <div className=" bg-black h-screen">
@@ -111,11 +139,15 @@ function Expense() {
             id="category"
             value={category}
             onChange={(e) => {
-              if(e.target.value==='food' || e.target.value==='Movie' || e.target.value==='transport' )
-              setCategory(e.target.value);
-            else{
-              alert('select a category')
-            }
+              if (
+                e.target.value === "food" ||
+                e.target.value === "Movie" ||
+                e.target.value === "transport"
+              )
+                setCategory(e.target.value);
+              else {
+                alert("select a category");
+              }
             }}
             className="rounded m-1 p-1"
             required
@@ -138,11 +170,20 @@ function Expense() {
           const item = items[key];
           return (
             <li
-              key={key} // You should use a unique key for each list item.
+              key={key}
               className="border mt-1 bg-slate-300 w-auto rounded-lg m-auto p-5 text-center"
             >
               {item.number} ruppes is spent on {item.description}. Category is{" "}
-              {item.category}.
+              {item.category}
+              <button className="p-1 border rounded-lg bg-gray-500 text-cyan-50  float-right w-16 m-auto ">
+                Edit
+              </button>
+              <button
+                onClick={() => deleteExpenseHandler(item.id)}
+                className="p-1 border rounded-lg bg-red-700 text-cyan-50 m-auto float-right w-16 "
+              >
+                Delete
+              </button>
             </li>
           );
         })}
