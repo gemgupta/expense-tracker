@@ -1,16 +1,19 @@
 import React from "react";
 import { useState, useContext } from "react";
-import AuthContext from "../Store/Auth-Context";
+// import AuthContext from "../Store/Auth-Context";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authActions } from "../Store/auth-slice";
 
 function Signup() {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [confirmpass, setconfirmpass] = useState("");
   const [isSignup, setIsSignUP] = useState(true);
-  const Authctx = useContext(AuthContext);
+  // const Authctx = useContext(AuthContext);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const signupHAndler = () => {
     setIsSignUP((prevstate) => !prevstate);
   };
@@ -67,7 +70,10 @@ function Signup() {
           throw new Error(errorMessage.error.message);
         } else {
           const tokenData = await response.json();
-          Authctx.Login(tokenData.idToken, tokenData.email);
+          dispatch(authActions.login());
+          dispatch(authActions.setEmail(tokenData.email));
+          dispatch(authActions.setToken(tokenData.idToken));
+          // Authctx.Login(tokenData.idToken, tokenData.email);
           console.log("Login success");
           navigate("/welcome");
         }

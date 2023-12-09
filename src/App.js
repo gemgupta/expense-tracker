@@ -1,18 +1,20 @@
 import "./App.css";
-import AuthContext from "./components/Store/Auth-Context";
+// import AuthContext from "./components/Store/Auth-Context";
 import Signup from "./components/signup/Signup";
 import { Routes, Route } from "react-router-dom";
 import Details from "./components/details/Details";
-import { useContext } from "react";
+// import { useContext } from "react";
 import Welcome from "./components/Welcome";
 import ForgotPass from "./components/Login/ForgotPass";
+import { useSelector } from "react-redux";
 function App() {
-  const AuthCtx = useContext(AuthContext);
+  // const AuthCtx = useContext(AuthContext);
+  const isAuth= useSelector((state)=> state.isAuthenticated)
   return (
     <>
       <Routes>
-        {AuthCtx.isLoggedIn && <Route exact path="/welcome" element={<Welcome />} />}
-        {!AuthCtx.isLoggedIn && (
+        {isAuth && <Route exact path="/welcome" element={<Welcome />} />}
+        {!isAuth && (
           <Route
             exact
             path="/"

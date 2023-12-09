@@ -1,11 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import AuthContext from "./Store/Auth-Context";
-import { useContext } from "react";
+// import AuthContext from "./Store/Auth-Context";
+// import { useContext } from "react";
 import Expense from "./Expense/Expense";
+import { useDispatch, useSelector } from "react-redux";
+import {authActions} from './Store/auth-slice'
+import { useNavigate } from "react-router-dom";
+
 function Welcome() {
-  const Authctx = useContext(AuthContext);
-  const token = Authctx.Token;
+  // const Authctx = useContext(AuthContext);
+  // const token = Authctx.Token;
+  const token = useSelector((state)=>state.token)
+  const navigate = useNavigate()
+  const dispatch= useDispatch()
   const verifyUserHandler = async () => {
     try {
       const response = await fetch(
@@ -26,7 +33,10 @@ function Welcome() {
     }
   };
   const logoutHandler = () => {
-    Authctx.Logout();
+    dispatch(authActions.logout())
+    localStorage.removeItem('token')
+    localStorage.removeItem('email')
+    navigate('/')
   };
   return (
     <>

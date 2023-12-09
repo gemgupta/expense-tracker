@@ -5,13 +5,17 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import AuthProvider from './components/Store/AuthProvider';
+import { Provider } from 'react-redux';
+import { store } from './components/Store/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
     <AuthProvider>
+    <Provider store={store}>
     <App />
+    </Provider>
     </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
