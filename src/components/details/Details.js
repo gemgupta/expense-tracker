@@ -1,13 +1,14 @@
 import React from "react";
-import { useState, useContext, useEffect } from "react";
-import AuthContext from "../Store/Auth-Context";
+import { useState, useEffect } from "react";
+// import AuthContext from "../Store/Auth-Context";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Details() {
   const [name, setname] = useState("");
   const [photourl, setPhotourl] = useState("");
-
-  const Authctx = useContext(AuthContext);
+  const token = useSelector((state) => state.token);
+  // const Authctx = useContext(AuthContext);
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
@@ -19,7 +20,7 @@ function Details() {
         {
           method: "POST",
           body: JSON.stringify({
-            idToken: Authctx.Token,
+            idToken: token,
             displayName: name,
             photoUrl: photourl,
             returnSecureToken: true,
@@ -51,7 +52,7 @@ function Details() {
           {
             method: "POST",
             body: JSON.stringify({
-              idToken: Authctx.Token,
+              idToken: token,
             }),
             headers: {
               "Content-Type": "application/json",
@@ -62,7 +63,7 @@ function Details() {
           const data = await response.json();
           setname(data.users[0].displayName);
           setPhotourl(data.users[0].photoUrl);
-          console.log(data)
+          console.log(data);
         } else {
           const errorMessage = await response.json();
           throw new Error(errorMessage.error.message);
@@ -72,7 +73,7 @@ function Details() {
       }
     }
     getUserDetails();
-  }, []);
+  });
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 ">

@@ -4,18 +4,18 @@ import { Link } from "react-router-dom";
 // import { useContext } from "react";
 import Expense from "./Expense/Expense";
 import { useDispatch, useSelector } from "react-redux";
-import {authActions} from './Store/auth-slice'
+import { authActions } from "./Store/auth-slice";
 import { useNavigate } from "react-router-dom";
 
 function Welcome() {
   // const Authctx = useContext(AuthContext);
   // const token = Authctx.Token;
-  const token = useSelector((state)=>state.token)
-  const navigate = useNavigate()
-  const dispatch= useDispatch()
+  const token = useSelector((state) => state.token);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const verifyUserHandler = async () => {
     try {
-      const response = await fetch(
+      await fetch(
         `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCGVMeLpfWsIIKfXWR4st1g3Msv03WDBoc`,
         {
           method: "POST",
@@ -33,18 +33,16 @@ function Welcome() {
     }
   };
   const logoutHandler = () => {
-    dispatch(authActions.logout())
-    localStorage.removeItem('token')
-    localStorage.removeItem('email')
-    navigate('/')
+    dispatch(authActions.logout());
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    navigate("/");
   };
   return (
     <>
       <div className=" bg-violet-700 flex p-2 sticky top-0 ">
-       
         <h1 className="text-xl m-auto text-white">Expense Tracker</h1>
 
-        
         <Link
           className=" m-1 p-2 border rounded-lg bg-red-700 text-cyan-50 "
           to="/Details"

@@ -27,7 +27,7 @@ function ForgotPass() {
         const errorMessage = await response.json();
         throw new Error(errorMessage.error.message);
       } else {
-        navigate("/Login");
+        navigate("/");
       }
     } catch (error) {
       alert(error);
