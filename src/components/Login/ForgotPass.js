@@ -11,7 +11,7 @@ function ForgotPass() {
 
     try {
       const response = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCybdrpqrvY0IcG00qrSUGktX-0TbtpEok",
+        "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCGVMeLpfWsIIKfXWR4st1g3Msv03WDBoc",
         {
           method: "POST",
           body: JSON.stringify({

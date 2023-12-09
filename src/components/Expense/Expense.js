@@ -27,7 +27,7 @@ function Expense() {
     };
     try {
       const response = await fetch(
-        "https://expense-tracker-35a83-default-rtdb.firebaseio.com/expense.json",
+        "https://expensetracker-69a6d-default-rtdb.firebaseio.com/expense.json",
         {
           method: "POST",
           body: JSON.stringify(item),
@@ -50,7 +50,7 @@ function Expense() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://expense-tracker-35a83-default-rtdb.firebaseio.com/expense.json",
+          "https://expensetracker-69a6d-default-rtdb.firebaseio.com/expense.json",
           {
             method: "GET",
 
@@ -80,7 +80,7 @@ function Expense() {
   const deleteExpenseHandler = async (key) => {
     try {
       const response = await fetch(
-        `https://expense-tracker-35a83-default-rtdb.firebaseio.com/expense/${key}.json`,
+        `https://expensetracker-69a6d-default-rtdb.firebaseio.com/expense/${key}.json`,
         {
           method: "DELETE",
 
@@ -102,7 +102,7 @@ function Expense() {
     setModal(true);
     try {
       const response = await fetch(
-        `https://expense-tracker-35a83-default-rtdb.firebaseio.com/expense/${key}.json`,
+        `https://expensetracker-69a6d-default-rtdb.firebaseio.com/expense/${key}.json`,
         {
           method: "GET",
 
@@ -135,7 +135,7 @@ const updatedExpense = {
 };
 try {
   const response = await fetch(
-    `https://expense-tracker-35a83-default-rtdb.firebaseio.com/expense/${editItemKey}.json`,
+    `https://expensetracker-69a6d-default-rtdb.firebaseio.com/expense/${editItemKey}.json`,
     {
       method: "PUT",
       body: JSON.stringify(updatedExpense),

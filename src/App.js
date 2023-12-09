@@ -11,11 +11,11 @@ function App() {
   return (
     <>
       <Routes>
-        {AuthCtx.isLoggedIn && <Route exact path="/" element={<Welcome />} />}
+        {AuthCtx.isLoggedIn && <Route exact path="/welcome" element={<Welcome />} />}
         {!AuthCtx.isLoggedIn && (
           <Route
             exact
-            path="/login"
+            path="/"
             element={
               <div className="App">
                 <Signup />

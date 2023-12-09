@@ -15,7 +15,7 @@ function Details() {
 
     try {
       const response = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCybdrpqrvY0IcG00qrSUGktX-0TbtpEok",
+        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCGVMeLpfWsIIKfXWR4st1g3Msv03WDBoc",
         {
           method: "POST",
           body: JSON.stringify({
@@ -47,7 +47,7 @@ function Details() {
     async function getUserDetails() {
       try {
         const response = await fetch(
-          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCybdrpqrvY0IcG00qrSUGktX-0TbtpEok",
+          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCGVMeLpfWsIIKfXWR4st1g3Msv03WDBoc",
           {
             method: "POST",
             body: JSON.stringify({

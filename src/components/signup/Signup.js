@@ -21,7 +21,7 @@ function Signup() {
       if (password === confirmpass) {
         try {
           const response = await fetch(
-            "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCybdrpqrvY0IcG00qrSUGktX-0TbtpEok",
+            "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCGVMeLpfWsIIKfXWR4st1g3Msv03WDBoc",
             {
               method: "POST",
               body: JSON.stringify({
@@ -49,7 +49,7 @@ function Signup() {
     } else {
       try {
         const response = await fetch(
-          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCybdrpqrvY0IcG00qrSUGktX-0TbtpEok",
+          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCGVMeLpfWsIIKfXWR4st1g3Msv03WDBoc",
           {
             method: "POST",
             body: JSON.stringify({
@@ -69,7 +69,7 @@ function Signup() {
           const tokenData = await response.json();
           Authctx.Login(tokenData.idToken, tokenData.email);
           console.log("Login success");
-          navigate("/");
+          navigate("/welcome");
         }
       } catch (error) {
         alert(error);

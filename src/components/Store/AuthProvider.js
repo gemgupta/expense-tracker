@@ -15,14 +15,14 @@ function AuthProvider(props) {
 
   const LoginHandler = (Token, email) => {
     setToken(Token);
+    setUserEmail(email);
     localStorage.setItem("token", Token);
     localStorage.setItem("email", userEmail);
 
-    setUserEmail(email);
   };
   const LogoutHandler = () => {
     setToken(null);
-    navigate("/Login");
+    navigate("/");
     localStorage.removeItem("token");
     localStorage.removeItem("email");
   };
