@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { authActions } from "../Store/auth-slice";
 import PremiumButton from "./PremiumButton";
 import { expenseActions } from "../Store/expense-slice";
 
@@ -14,45 +13,40 @@ function Expense() {
   const [editedcategory, seteditedcategory] = useState("");
   const [editItemKey, setEditItemKey] = useState(null);
   const [modal, setModal] = useState(false);
-  // const [, setModal] = useState(false);
-  // const [items, setItenms] = useState([]);
-const dispatch= useDispatch();
-const premium= useSelector((state)=>state.expense.premiumButtonToggle)
-const data= useSelector((state)=>state.expense.expenseData)
+  const dispatch = useDispatch();
 
-useEffect(() => {
- 
+  const data = useSelector((state) => state.expense.expenseData);
+  
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  fetchData();
-},[]);
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        "https://expensetracker-69a6d-default-rtdb.firebaseio.com/expense.json",
+        {
+          method: "GET",
 
-const fetchData = async () => {
-  try {
-    const response = await fetch(
-      "https://expensetracker-69a6d-default-rtdb.firebaseio.com/expense.json",
-      {
-        method: "GET",
-        
-        headers: { "Content-Type": "Application/json" },
-      }
+          headers: { "Content-Type": "Application/json" },
+        }
       );
       if (!response.ok) {
         throw new Error("Something went wrong. GET DATA NOT SUCCESSFUL");
       } else {
         const data = await response.json();
-        
+
         const expenses = Object.keys(data).map((key) => ({
           id: key, // Store the Firebase key as 'id'
           ...data[key],
         }));
-        dispatch(expenseActions.getExpense(expenses))
+        dispatch(expenseActions.getExpense(expenses));
         console.log(data);
-      // setItenms(expenses);
+      }
+    } catch (error) {
+      alert(error.messages);
     }
-  } catch (error) {
-    alert(error.messages);
-  }
-};
+  };
 
   const expenseSubmitHandler = async (e) => {
     e.preventDefault();
@@ -61,7 +55,6 @@ const fetchData = async () => {
     setDescription("");
     setnumber("");
     const item = {
-      // key: Math.random(),
       number: number,
       description: description,
       category: category,
@@ -75,22 +68,18 @@ const fetchData = async () => {
           headers: { "Content-Type": "Application/json" },
         }
       );
-      console.log('djs', response)
+      console.log("djs", response);
       if (!response.ok) {
         throw new Error("Something went wrong. POST DATA NOT SUCCESSFUL");
       } else {
         const data1 = await response.json();
-        console.log(data1)
-        // dispatch(expenseActions.getExpense(item))
-        // setItenms([...items, item]);
-       await fetchData();
-        
+        console.log(data1);
+        fetchData();
       }
     } catch (error) {
       alert(error.messages);
     }
   };
-  
 
   const deleteExpenseHandler = async (key) => {
     try {
@@ -106,10 +95,9 @@ const fetchData = async () => {
         throw new Error("Something went wrong. DELETE DATA NOT SUCCESSFUL");
       } else {
         const updatedItems = data.filter((item) => item.id !== key);
-        dispatch(expenseActions.getExpense(updatedItems))
-        // setItenms(updatedItems);
+        dispatch(expenseActions.getExpense(updatedItems));
         console.log(updatedItems);
-       await fetchData();
+        fetchData();
       }
     } catch (error) {
       alert(error.messages);
@@ -130,12 +118,10 @@ const fetchData = async () => {
         throw new Error("Something went wrong. GET DATA NOT SUCCESSFUL");
       } else {
         const data = await response.json();
-        // setEditItem(data);
         seteditedNumber(data.number);
         setediteddescription(data.description);
         seteditedcategory(data.category);
         setEditItemKey(key);
-
       }
     } catch (error) {
       alert(error.messages);
@@ -145,7 +131,6 @@ const fetchData = async () => {
   const putRequestHandler = async (e) => {
     e.preventDefault();
     const updatedExpense = {
-      // key: Math.random(),
       number: editedNumber,
       description: editeddescription,
       category: editedcategory,
@@ -165,8 +150,7 @@ const fetchData = async () => {
         const updatedItems = data.map((item) =>
           item.id === editItemKey ? { ...item, ...updatedExpense } : item
         );
-        dispatch(expenseActions.getExpense(updatedItems))
-        // setItenms(updatedItems);
+        dispatch(expenseActions.getExpense(updatedItems));
         setModal(false);
         setEditItemKey(null);
         seteditedcategory("");
@@ -189,7 +173,7 @@ const fetchData = async () => {
           Edit Your Expense
         </h2>
       )}
-      {!modal && !premium &&  (
+      {!modal && (
         <form
           onSubmit={expenseSubmitHandler}
           className=" block border  shadow-md shadow-white bg-slate-300 w-1/2 rounded-lg m-auto p-5"
@@ -258,7 +242,7 @@ const fetchData = async () => {
           </button>
         </form>
       )}
-      {!modal && premium && <PremiumButton/>}
+      <PremiumButton />
       {modal && (
         <form
           onSubmit={putRequestHandler}
@@ -269,7 +253,7 @@ const fetchData = async () => {
               amount
             </label>
             <input
-            name="amount"
+              name="amount"
               type="number"
               placeholder="enter amount"
               onChange={(e) => {
@@ -353,7 +337,7 @@ const fetchData = async () => {
                 className="border mt-1 bg-slate-300 w-auto rounded-lg m-auto p-5 text-center"
               >
                 {item.number} ruppes is spent on {item.description}. Category is{" "}
-                {item.category} 
+                {item.category}
                 <button
                   onClick={() => editExpenseHandler(item.id)}
                   className="p-1 border rounded-lg bg-gray-500 text-cyan-50  float-right w-16 m-auto "
