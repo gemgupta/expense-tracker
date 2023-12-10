@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 function Welcome() {
   // const Authctx = useContext(AuthContext);
   // const token = Authctx.Token;
-  const token = useSelector((state) => state.token);
+  const token = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const verifyUserHandler = async () => {

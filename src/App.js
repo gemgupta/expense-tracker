@@ -9,7 +9,7 @@ import ForgotPass from "./components/Login/ForgotPass";
 import { useSelector } from "react-redux";
 function App() {
   // const AuthCtx = useContext(AuthContext);
-  const isAuth= useSelector((state)=> state.isAuthenticated)
+  const isAuth= useSelector((state)=> state.auth.isAuthenticated)
   return (
     <>
       <Routes>
