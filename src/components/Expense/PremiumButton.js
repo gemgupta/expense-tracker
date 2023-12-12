@@ -11,10 +11,21 @@ function PremiumButton() {
   dispatch(expenseActions.showpremiumButton(totalAmount));
   const premium = useSelector((state) => state.expense.showButton);
   console.log(premium);
-  return ( premium &&
-    <button className="border w-1/2 block m-auto p-5  bg-red-600 text-white rounded-lg ">
-      Buy Premium
-    </button>
+  const ActivatePremium = (e) => {
+    e.preventDefault();
+    dispatch(expenseActions.premiumActivate());
+    console.log("hello");
+  };
+
+  return (
+    premium && (
+      <button
+        onClick={ActivatePremium}
+        className="border w-1/2 block m-auto p-5  bg-red-600 text-white rounded-lg "
+      >
+        Activate Premium
+      </button>
+    )
   );
 }
 

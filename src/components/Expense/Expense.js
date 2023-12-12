@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PremiumButton from "./PremiumButton";
 import { expenseActions } from "../Store/expense-slice";
+import DarkThemeToggle from "./DarkThemeToggle";
 
 function Expense() {
   const [number, setnumber] = useState("");
@@ -14,9 +15,9 @@ function Expense() {
   const [editItemKey, setEditItemKey] = useState(null);
   const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
-
+  const dark = useSelector((state) => state.expense.darkTheme);
   const data = useSelector((state) => state.expense.expenseData);
-  
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -163,20 +164,27 @@ function Expense() {
     }
   };
   return (
-    <div className=" bg-black h-screen">
+    <div
+      className=" bg-stone-200 h-screen"
+      style={{ backgroundColor: dark ? "#3b3c36" : "#f3f3f3" }}
+    >
+      <DarkThemeToggle />
       {!modal ? (
-        <h2 className=" w-1/2 text-center font-bold m-auto p-5 text-white">
+        <h2
+          className=" w-1/2 text-center font-bold m-auto p-5 text-black"
+          style={{ color: dark ? "white" : "black" }}
+        >
           Start adding your expenses
         </h2>
       ) : (
-        <h2 className=" w-1/2 text-center font-bold m-auto p-5 text-white">
+        <h2 className=" w-1/2 text-center font-bold m-auto p-5 text-black">
           Edit Your Expense
         </h2>
       )}
       {!modal && (
         <form
           onSubmit={expenseSubmitHandler}
-          className=" block border  shadow-md shadow-white bg-slate-300 w-1/2 rounded-lg m-auto p-5"
+          className=" block border  shadow-md shadow-white bg-slate-500 w-1/2 rounded-lg m-auto p-5"
         >
           <div className="block">
             <label className="rounded m-1 p-1 font-bold" htmlFor="amount">
