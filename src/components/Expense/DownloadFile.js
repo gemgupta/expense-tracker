@@ -7,8 +7,6 @@ function DownloadFile() {
     function makeCSV(rows) {
       let arr = [];
       rows.forEach((element) => {
-        //   element.push(['Category', 'description', 'Amount'])
-
         const { id, ...idTrimmed } = element;
         arr.push(Object.values(idTrimmed));
       });

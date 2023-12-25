@@ -17,6 +17,7 @@ function Expense() {
   const dispatch = useDispatch();
   const dark = useSelector((state) => state.expense.darkTheme);
   const data = useSelector((state) => state.expense.expenseData);
+  const email = useSelector((state) => state.auth.email);
 
   useEffect(() => {
     fetchData();
@@ -24,8 +25,9 @@ function Expense() {
 
   const fetchData = async () => {
     try {
+      const userModifiedEmail = email.replace(/[.@]/g, "");
       const response = await fetch(
-        "https://expensetracker-69a6d-default-rtdb.firebaseio.com/expense.json",
+        `https://expensetracker-69a6d-default-rtdb.firebaseio.com/${userModifiedEmail}.json`,
         {
           method: "GET",
 
@@ -37,6 +39,7 @@ function Expense() {
       } else {
         const data = await response.json();
 
+        console.log(typeof data);
         const expenses = Object.keys(data).map((key) => ({
           id: key, // Store the Firebase key as 'id'
           ...data[key],
@@ -61,8 +64,9 @@ function Expense() {
       category: category,
     };
     try {
+      const userModifiedEmail = email.replace(/[.@]/g, "");
       const response = await fetch(
-        "https://expensetracker-69a6d-default-rtdb.firebaseio.com/expense.json",
+        `https://expensetracker-69a6d-default-rtdb.firebaseio.com/${userModifiedEmail}.json`,
         {
           method: "POST",
           body: JSON.stringify(item),
@@ -83,9 +87,10 @@ function Expense() {
   };
 
   const deleteExpenseHandler = async (key) => {
+    const userModifiedEmail = email.replace(/[.@]/g, "");
     try {
       const response = await fetch(
-        `https://expensetracker-69a6d-default-rtdb.firebaseio.com/expense/${key}.json`,
+        `https://expensetracker-69a6d-default-rtdb.firebaseio.com/${userModifiedEmail}/${key}.json`,
         {
           method: "DELETE",
 
@@ -106,9 +111,10 @@ function Expense() {
   };
   const editExpenseHandler = async (key) => {
     setModal(true);
+    const userModifiedEmail = email.replace(/[.@]/g, "");
     try {
       const response = await fetch(
-        `https://expensetracker-69a6d-default-rtdb.firebaseio.com/expense/${key}.json`,
+        `https://expensetracker-69a6d-default-rtdb.firebaseio.com/${userModifiedEmail}/${key}.json`,
         {
           method: "GET",
 
@@ -137,8 +143,9 @@ function Expense() {
       category: editedcategory,
     };
     try {
+      const userModifiedEmail = email.replace(/[.@]/g, "");
       const response = await fetch(
-        `https://expensetracker-69a6d-default-rtdb.firebaseio.com/expense/${editItemKey}.json`,
+        `https://expensetracker-69a6d-default-rtdb.firebaseio.com/${userModifiedEmail}/${editItemKey}.json`,
         {
           method: "PUT",
           body: JSON.stringify(updatedExpense),
