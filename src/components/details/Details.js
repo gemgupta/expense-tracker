@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 function Details() {
   const [name, setname] = useState("");
   const [photourl, setPhotourl] = useState("");
-  const token = useSelector((state) => state.token);
+  const token = useSelector((state) => state.auth.token);
   // const Authctx = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ function Details() {
       );
       if (response.ok) {
         alert("profile details updated successfully");
-        navigate("/");
+        navigate("/welcome");
       } else {
         const errorMessage = await response.json();
         throw new Error(errorMessage.error.message);

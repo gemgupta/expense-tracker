@@ -42,6 +42,8 @@ function Signup() {
             throw new Error(errorMessage.error.message);
           } else {
             console.log("user has successfully signed up");
+            setIsSignUP(true)
+           
           }
         } catch (error) {
           alert(error);

@@ -38,14 +38,18 @@ function Expense() {
         throw new Error("Something went wrong. GET DATA NOT SUCCESSFUL");
       } else {
         const data = await response.json();
-
-        console.log(typeof data);
-        const expenses = Object.keys(data).map((key) => ({
-          id: key, // Store the Firebase key as 'id'
-          ...data[key],
-        }));
-        dispatch(expenseActions.getExpense(expenses));
-        console.log(data);
+        if (data === null || data === undefined) {
+          console.log("No data found.");
+          // Handle the case when there is no data, for example, set an empty array
+          dispatch(expenseActions.getExpense([]));
+        } else {
+          const expenses = Object.keys(data).map((key) => ({
+            id: key,
+            ...data[key],
+          }));
+          console.log(expenses);
+          dispatch(expenseActions.getExpense(expenses));
+        }
       }
     } catch (error) {
       alert(error.messages);
@@ -345,13 +349,12 @@ function Expense() {
         <ul className=" border shadow-sm shadow-white  mt-5 bg-slate-500 w-1/2 rounded-lg m-auto p-5 text-center">
           {Object.keys(data).map((key) => {
             const item = data[key];
-
             return (
               <li
                 key={key}
                 className="border mt-1 bg-slate-300 w-auto rounded-lg m-auto p-5 text-center"
               >
-                {item.number} ruppes is spent on {item.description}. Category is{" "}
+                {item.number} rupees is spent on {item.description}. Category is{" "}
                 {item.category}
                 <button
                   onClick={() => editExpenseHandler(item.id)}
